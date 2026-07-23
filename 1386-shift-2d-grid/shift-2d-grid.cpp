@@ -1,26 +1,28 @@
 class Solution {
+
 public:
-    vector<vector<int>> shiftGrid(vector<vector<int>>& grid, int k) {
-        int m = grid.size();
-        int n = grid[0].size();
-        int total = m * n;
-        
-        k = k % total;
-        if (k == 0) return grid;
-        vector<vector<int>> result(m, vector<int>(n));
-        
-        for (int i = 0; i < m; ++i) {
-            for (int j = 0; j < n; ++j) {
-                int current_1d = i * n + j;
-                int new_1d = (current_1d + k) % total;
-                int new_row = new_1d / n;
-                int new_col = new_1d % n;
-                
-                result[new_row][new_col] = grid[i][j];
-            }
+    vector<vector<int>> shiftGrid(vector<vector<int>>& grid,int k){
+        int row = grid.size();
+        int col = grid[0].size();
+
+        int n = row*col;
+        k = k%n;
+        if(k==0){
+            return grid;
         }
-        
-        return result;
-    
+
+        auto reverse = [&](int i,int j){
+            while(i<j){
+                swap(grid[i/col][i%col],grid[j/col][j%col]);
+                i++;
+                j--;
+            }
+        };
+
+        reverse(0,n-1);
+        reverse(0,k-1);
+        reverse(k,n-1);
+
+        return grid;
     }
 };
