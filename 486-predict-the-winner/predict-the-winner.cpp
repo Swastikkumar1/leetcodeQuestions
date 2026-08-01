@@ -1,16 +1,22 @@
 class Solution {
 public:
-    bool predictTheWinner(vector<int>& nums) {
+    int solve(vector<int>& nums, int i, int j, vector<vector<int>>& dp) {
+        if (i == j)
+            return nums[i];
+
+        if (dp[i][j] != INT_MIN)
+            return dp[i][j];
+
+        int takeLeft = nums[i] - solve(nums, i + 1, j, dp);
+        int takeRight = nums[j] - solve(nums, i, j - 1, dp);
+
+        return dp[i][j] = max(takeLeft, takeRight);
+    }
+
+    bool predictTheWinner(vector<int>& nums) {   // <-- lowercase p
         int n = nums.size();
-        
-        if (n % 2 == 0) return true; 
-        
-        vector<int> dp(nums);
-        for (int i = n - 2; i >= 0; --i) {
-            for (int j = i + 1; j < n; ++j) {
-                dp[j] = max(nums[i] - dp[j], nums[j] - dp[j - 1]);
-            }
-        }
-        return dp[n - 1] >= 0;
+        vector<vector<int>> dp(n, vector<int>(n, INT_MIN));
+
+        return solve(nums, 0, n - 1, dp) >= 0;
     }
 };
